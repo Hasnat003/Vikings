@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vikings</title>
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     font-family: 'Poppins', sans-serif;
-    min-height:100vh;
+    min-height: 100vh;
     position: relative;
     overflow: hidden;
     background: #111; /* fallback */
@@ -21,6 +21,9 @@
     width: 100%; height: 100%;
     object-fit: cover;
     z-index: -2;
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
   }
 
   /* Dark overlay for readability */
@@ -28,7 +31,7 @@
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background: rgba(0,0,0,0.4); /* slightly transparent */
+    background: rgba(0, 0, 0, 0.4);
     z-index: -1;
   }
 
@@ -36,7 +39,7 @@
   .container {
     position: relative;
     z-index: 1;
-    background: rgba(0,0,0,0.55);
+    background: rgba(0, 0, 0, 0.55);
     backdrop-filter: blur(8px);
     border-radius: 1.5rem;
     padding: 2rem 1rem;
@@ -53,45 +56,66 @@
     overflow: hidden;
     margin: 0 auto 1rem;
   }
-  .logo img { width:100%; height:100%; object-fit: cover; }
 
-  h1 { font-size:1.5rem; margin-bottom:0.3rem; }
-  p.subtitle { font-size:0.9rem; color:#ccc; margin-bottom:1rem; }
+  .logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  h1 { font-size: 1.5rem; margin-bottom: 0.3rem; }
+  p.subtitle { font-size: 0.9rem; color: #ccc; margin-bottom: 1rem; }
 
   /* Social Icons */
   .social-icons {
-    display: flex; justify-content: center; gap:1rem; margin-bottom:1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
   }
+
   .social-icons a {
-    width:45px; height:45px;
-    display:flex; justify-content:center; align-items:center;
-    background: rgba(255,255,255,0.1);
-    border-radius:50%;
+    width: 45px; height: 45px;
+    display: flex; justify-content: center; align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
     transition: all 0.3s ease;
   }
+
   .social-icons img {
-    width:60%; height:60%; object-fit: contain;
+    width: 60%; height: 60%;
+    object-fit: contain;
     filter: brightness(0) invert(1);
     transition: transform 0.3s ease, filter 0.3s ease;
   }
+
   .social-icons a:hover img { filter: brightness(1); transform: scale(1.15); }
-  .social-icons a.facebook:hover { background:#1877f2; transform: scale(1.1); }
-  .social-icons a.instagram:hover { background: linear-gradient(45deg,#f9ce34,#fa7e1e,#d62976,#962fbf,#4f5bd5); transform: scale(1.1); }
-  .social-icons a.whatsapp:hover { background:#25D366; transform: scale(1.1); }
-  .social-icons a.website:hover { background:#00c8ff; transform: scale(1.1); }
+  .social-icons a.facebook:hover { background: #1877f2; transform: scale(1.1); }
+  .social-icons a.instagram:hover {
+    background: linear-gradient(45deg, #f9ce34, #fa7e1e, #d62976, #962fbf, #4f5bd5);
+    transform: scale(1.1);
+  }
+  .social-icons a.whatsapp:hover { background: #25D366; transform: scale(1.1); }
+  .social-icons a.website:hover { background: #00c8ff; transform: scale(1.1); }
 
-  footer { margin-top:1.5rem; font-size:0.75rem; color:#bbb; }
-
+  footer {
+    margin-top: 1.5rem;
+    font-size: 0.75rem;
+    color: #bbb;
+  }
 </style>
 </head>
 <body>
-    <!-- Background Video -->
-<video autoplay muted loop playsinline id="bg-video">
-  <source src="./media/bg video.mp4" type="video/mp4">
-  Your browser does not support HTML5 video.
-</video>
 
-<div class="overlay"></div>
+  <!-- Background Video (with fallback image & optimization) -->
+  <video autoplay muted loop playsinline preload="metadata" id="bg-video" poster="./media/bg-fallback.png">
+    <source src="./media/bg-video-optimized.webm" type="video/webm">
+    <source src="./media/bg-video-optimized.mp4" type="video/mp4">
+    Your browser does not support HTML5 video.
+  </video>
+
+  <div class="overlay"></div>
+
   <div class="container">
     <div class="logo">
       <img src="./media/VIkings Logo.jpg" alt="Vikings Logo">
@@ -99,7 +123,7 @@
     <h1>Vikings</h1>
     <p class="subtitle">Wear the Spirit of Legends</p>
 
-    <!-- ✅ IMAGE SOCIAL ICONS -->
+    <!-- Social Icons -->
     <div class="social-icons">
       <a href="https://www.facebook.com/share/1AXrhj44Ju/" target="_blank" rel="noopener" class="facebook" title="Facebook">
         <img src="./media/facebook.png" alt="Facebook">
@@ -118,8 +142,24 @@
       </a>
     </div>
 
-    <footer>© 2025 Vikings<br>
-All rights reserved.</footer>
+    <footer>
+    © 2025 Vikings<br>
+      All rights reserved.
+    </footer>
   </div>
+
+  <!-- Lazy load the video for smoother startup -->
+  <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const video = document.getElementById('bg-video');
+    const sources = video.querySelectorAll('source');
+    sources.forEach(source => {
+      const src = source.getAttribute('data-src');
+      if (src) source.setAttribute('src', src);
+    });
+    video.load();
+  });
+  </script>
+
 </body>
 </html>
