@@ -5,49 +5,50 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vikings</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body {
     font-family: 'Poppins', sans-serif;
-    min-height: 100vh;
-    position: relative;
-    overflow: hidden;
-    background: #111; /* fallback */
+    min-height: 100%;
+    overflow-y: auto; /* enable scrolling */
   }
 
-  /* Fullscreen Background Video */
+  /* Fullscreen background video */
   #bg-video {
     position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
+    top:0; left:0;
+    width:100%; height:100%;
     object-fit: cover;
     z-index: -2;
-    will-change: transform;
-    transform: translateZ(0);
-    backface-visibility: hidden;
   }
 
-  /* Dark overlay for readability */
+  /* Subtle overlay */
   .overlay {
     position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.4);
+    top:0; left:0;
+    width:100%; height:100%;
+    background: rgba(0, 0, 0, 0.2); /* subtle dark */
     z-index: -1;
   }
 
-  /* Container */
-  .container {
+  /* Content */
+  .content {
     position: relative;
-    z-index: 1;
-    background: rgba(0, 0, 0, 0.55);
-    backdrop-filter: blur(8px);
+    z-index:1;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 3rem 1rem 6rem; /* bottom padding for footer */
+  }
+
+  /* Boxes */
+  .container {
+    background: rgba(0,0,0,0.4); /* semi-transparent for glass effect */
+    backdrop-filter: blur(3px);
     border-radius: 1.5rem;
     padding: 2rem 1rem;
-    max-width: 400px;
-    width: 100%;
+    margin-bottom: 2rem;
     text-align: center;
     color: white;
-    margin: 5% auto;
+    text-shadow: 0 0 5px rgba(0,0,0,0.7);
   }
 
   .logo {
@@ -56,15 +57,10 @@
     overflow: hidden;
     margin: 0 auto 1rem;
   }
+  .logo img { width:100%; height:100%; object-fit: cover; }
 
-  .logo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  h1 { font-size: 1.5rem; margin-bottom: 0.3rem; }
-  p.subtitle { font-size: 0.9rem; color: #ccc; margin-bottom: 1rem; }
+  h1 { font-size:1.5rem; margin-bottom:0.3rem; }
+  p.subtitle { font-size:0.9rem; margin-bottom:1rem; }
 
   /* Social Icons */
   .social-icons {
@@ -73,79 +69,95 @@
     gap: 1rem;
     margin-bottom: 1.5rem;
   }
-
   .social-icons a {
     width: 45px; height: 45px;
-    display: flex; justify-content: center; align-items: center;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
+    display:flex; justify-content:center; align-items:center;
+    background: rgba(255,255,255,0.1);
+    border-radius:50%;
     transition: all 0.3s ease;
   }
-
   .social-icons img {
-    width: 60%; height: 60%;
-    object-fit: contain;
+    width:60%; height:60%;
+    object-fit:contain;
     filter: brightness(0) invert(1);
     transition: transform 0.3s ease, filter 0.3s ease;
   }
-
-  .social-icons a:hover img { filter: brightness(1); transform: scale(1.15); }
-  .social-icons a.facebook:hover { background: #1877f2; transform: scale(1.1); }
+  .social-icons a:hover img { filter:brightness(1); transform:scale(1.15); }
+  .social-icons a.facebook:hover { background:#1877f2; transform:scale(1.1); }
   .social-icons a.instagram:hover {
-    background: linear-gradient(45deg, #f9ce34, #fa7e1e, #d62976, #962fbf, #4f5bd5);
-    transform: scale(1.1);
+    background: linear-gradient(45deg,#f9ce34,#fa7e1e,#d62976,#962fbf,#4f5bd5);
+    transform:scale(1.1);
   }
-  .social-icons a.whatsapp:hover { background: #25D366; transform: scale(1.1); }
-  .social-icons a.website:hover { background: #00c8ff; transform: scale(1.1); }
+  .social-icons a.whatsapp:hover { background:#25D366; transform:scale(1.1); }
+  .social-icons a.website:hover { background:#00c8ff; transform:scale(1.1); }
 
+  /* Fixed Footer */
   footer {
-    margin-top: 1.5rem;
-    font-size: 0.75rem;
-    color: #bbb;
+    position: fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    background: rgba(0,0,0,0.5);
+    color:#bbb;
+    text-align:center;
+    padding:1rem 0;
+    z-index:2;
+    font-size:0.75rem;
+  }
+
+  @media(max-width:480px){
+    .container { padding:1.5rem 1rem; }
+    h1 { font-size:1.3rem; }
+    .logo { width:60px; height:60px; }
   }
 </style>
 </head>
 <body>
 
   <!-- Background Video -->
-  <video autoplay muted loop playsinline preload="metadata" id="bg-video">
+  <video autoplay muted loop playsinline id="bg-video">
     <source src="./media/bg-video-optimized.mp4" type="video/mp4">
     Your browser does not support HTML5 video.
   </video>
-
   <div class="overlay"></div>
 
-  <div class="container">
-    <div class="logo">
-      <img src="./media/VIkings Logo.jpg" alt="Vikings Logo">
-    </div>
-    <h1>Vikings</h1>
-    <p class="subtitle">Wear the Spirit of Legends</p>
+  <!-- Scrollable content -->
+  <div class="content">
 
-    <!-- Social Icons -->
-    <div class="social-icons">
-      <a href="https://www.facebook.com/share/1AXrhj44Ju/" target="_blank" rel="noopener" class="facebook" title="Facebook">
-        <img src="./media/facebook.png" alt="Facebook">
-      </a>
-
-      <a href="https://www.instagram.com/vikings_bd?igsh=MXYwZHo2b3VoaGpjZg==" target="_blank" rel="noopener" class="instagram" title="Instagram">
-        <img src="./media/instagram.png" alt="Instagram">
-      </a>
-
-      <a href="https://api.whatsapp.com/send?phone=8801533968077" target="_blank" rel="noopener" class="whatsapp" title="WhatsApp">
-        <img src="./media/whatsapp.png" alt="WhatsApp">
-      </a>
-
-      <a href="https://www.image.co.com" target="_blank" rel="noopener" class="website" title="Website">
-        <img src="./media/website.png" alt="Website">
-      </a>
+    <!-- Vikings Box -->
+    <div class="container">
+      <div class="logo">
+        <img src="./media/VIkings Logo.jpg" alt="Vikings Logo">
+      </div>
+      <h1>Vikings</h1>
+      <p class="subtitle">Wear the Spirit of Legends</p>
+      <div class="social-icons">
+        <a href="https://www.facebook.com/share/1AXrhj44Ju/" target="_blank"><img src="./media/facebook.png" alt="Facebook"></a>
+        <a href="https://www.instagram.com/vikings_bd?igsh=MXYwZHo2b3VoaGpjZg==" target="_blank"><img src="./media/instagram.png" alt="Instagram"></a>
+        <a href="https://api.whatsapp.com/send?phone=8801533968077" target="_blank"><img src="./media/whatsapp.png" alt="WhatsApp"></a>
+        <a href="#"><img src="./media/website.png" alt="Website"></a>
+      </div>
     </div>
 
-    <footer>
-      © 2025 Vikings<br>
-      All rights reserved.
-    </footer>
+    <!-- 6 O'Clock Box -->
+    <div class="container">
+      <div class="logo">
+        <img src="./media/logo 6 O clock.jpg" alt="6 O'Clock Logo">
+      </div>
+      <h1>6 O'Clock</h1>
+      <p class="subtitle">Feel the Rhythm of Time</p>
+      <div class="social-icons">
+        <a href="https://www.facebook.com/share/1JQ1XVkBYF/" target="_blank"><img src="./media/facebook.png" alt="Facebook"></a>
+        <a href="https://www.instagram.com/6.oclock.bd?igsh=ZmhqNnF4b2trMnk5" target="_blank"><img src="./media/instagram.png" alt="Instagram"></a>
+        <a href="https://api.whatsapp.com/send?phone=8801533968077" target="_blank"><img src="./media/whatsapp.png" alt="WhatsApp"></a>
+        <a href="#"><img src="./media/website.png" alt="Website"></a>
+      </div>
+    </div>
+
   </div>
+
+  <!-- Footer -->
+  <footer>© 2025 Mr. Aeich – All rights reserved.</footer>
 
 </body>
 </html>
